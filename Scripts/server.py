@@ -68,9 +68,28 @@ def display_villes():
 
 @app.route('/mock_data', methods=['GET'])
 def display_mock_data():
-    mock_data = MockData.select()
-    return render_template('mock_data.html', mock_data=mock_data)
+    # Paramètres pour la pagination
+    page = int(request.args.get('page', 1))  # Numéro de la page actuelle
+    per_page = 50  # Nombre d'éléments par page
+    offset = (page - 1) * per_page  # Calcul de l'offset
 
+    # Récupération des données
+    query = MockData.select()
+    mock_data = query.limit(per_page).offset(offset)
+
+    # Calcul du nombre total de pages
+    total_mock_data = query.count()
+    total_pages = (total_mock_data // per_page) + (1 if total_mock_data % per_page > 0 else 0)
+
+    # Rendu du template avec passage explicite de max et min
+    return render_template(
+        'mock_data.html',
+        mock_data=mock_data,
+        page=page,
+        total_pages=total_pages,
+        max=max,
+        min=min
+    )
 
 # Route pour récupérer un département par ID
 @app.route('/api/departements/<int:departement_id>', methods=['GET'])

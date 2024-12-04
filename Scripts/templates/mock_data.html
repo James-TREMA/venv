@@ -3,133 +3,166 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mock Data</title>
     <style>
+        /* Styles globaux */
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f9f9f9;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f9;
             color: #333;
+            margin: 0;
+            padding: 0;
         }
+
         header {
-            text-align: center;
+            background-color: #2b2d42;
+            color: #ffffff;
             padding: 20px 0;
-            background-color: #007bff;
-            color: white;
-            border-radius: 5px;
-            margin-bottom: 20px;
+            text-align: center;
         }
+
         header h1 {
             margin: 0;
+            font-size: 24px;
+            font-weight: 700;
         }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Tableau */
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
-            background-color: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
+
         th, td {
-            border: 1px solid #ddd;
-            padding: 12px;
             text-align: left;
+            padding: 10px;
+            border: 1px solid #ddd;
         }
+
         th {
-            background-color: #007bff;
+            background-color: #2b2d42;
             color: white;
         }
+
         tr:nth-child(even) {
-            background-color: #f2f2f2;
+            background-color: #f4f4f9;
         }
+
         tr:hover {
-            background-color: #e9ecef;
+            background-color: #edf2f4;
         }
+
+        /* Pagination */
         .pagination {
+            display: flex;
+            justify-content: center;
             margin-top: 20px;
-            text-align: center;
         }
+
         .pagination a {
             margin: 0 5px;
             padding: 8px 12px;
-            border: 1px solid #ddd;
-            text-decoration: none;
-            color: #007bff;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-        .pagination a:hover {
-            background-color: #007bff;
-            color: white;
-        }
-        .pagination a.active {
-            background-color: #0056b3;
-            color: white;
-            border: 1px solid #0056b3;
-        }
-        .search-bar {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .search-bar input[type="text"] {
-            width: 300px;
-            padding: 10px;
             border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 14px;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #2b2d42;
+            font-weight: bold;
         }
-        .search-bar button {
-            padding: 10px 20px;
-            background-color: #007bff;
+
+        .pagination a:hover {
+            background-color: #8d99ae;
             color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
         }
-        .search-bar button:hover {
-            background-color: #0056b3;
+
+        .pagination a.active {
+            background-color: #ef233c;
+            color: white;
+            border-color: #ef233c;
+        }
+
+        /* Accessibilité */
+        .pagination a:focus {
+            outline: 2px solid #2b2d42;
+            outline-offset: 2px;
         }
     </style>
 </head>
 <body>
-    <!-- <header>
-        <h1>Template Title</h1>
-    </header> -->
-    <div class="content">
-        <header>
-            <h1>Mock Data</h1>
-        </header>
-        <div class="content">
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Prénom</th>
-                        <th>Nom</th>
-                        <th>Email</th>
-                        <th>Genre</th>
-                        <th>IP Address</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for data in mock_data %}
-                    <tr>
-                        <td>{{ data.id }}</td>
-                        <td>{{ data.first_name }}</td>
-                        <td>{{ data.last_name }}</td>
-                        <td>{{ data.email }}</td>
-                        <td>{{ data.gender }}</td>
-                        <td>{{ data.ip_address }}</td>
-                    </tr>
-                    {% else %}
-                    <tr>
-                        <td colspan="6" style="text-align: center;">Aucune donnée disponible.</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>        
+    <header>
+        <h1>Mock Data</h1>
+    </header>
+    <div class="container">
+        <!-- Tableau -->
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Prénom</th>
+                    <th>Nom</th>
+                    <th>Email</th>
+                    <th>Genre</th>
+                    <th>IP Address</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for data in mock_data %}
+                <tr>
+                    <td>{{ data.id }}</td>
+                    <td>{{ data.first_name }}</td>
+                    <td>{{ data.last_name }}</td>
+                    <td>{{ data.email }}</td>
+                    <td>{{ data.gender }}</td>
+                    <td>{{ data.ip_address }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" style="text-align: center;">Aucune donnée disponible.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <div class="pagination">
+            {% if page > 1 %}
+            <a href="?page={{ page - 1 }}">Précédent</a>
+            {% endif %}
+
+            {% set start_page = max(1, page - 5) %}
+            {% set end_page = min(total_pages, page + 5) %}
+
+            {% if start_page > 1 %}
+            <a href="?page=1">1</a>
+            {% if start_page > 2 %}
+            <span>...</span>
+            {% endif %}
+            {% endif %}
+
+            {% for p in range(start_page, end_page + 1) %}
+            <a href="?page={{ p }}" class="{{ 'active' if p == page else '' }}">{{ p }}</a>
+            {% endfor %}
+
+            {% if end_page < total_pages %}
+            {% if end_page < total_pages - 1 %}
+            <span>...</span>
+            {% endif %}
+            <a href="?page={{ total_pages }}">{{ total_pages }}</a>
+            {% endif %}
+
+            {% if page < total_pages %}
+            <a href="?page={{ page + 1 }}">Suivant</a>
+            {% endif %}
+        </div>
     </div>
 </body>
 </html>

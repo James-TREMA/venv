@@ -3,168 +3,204 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des Villes</title>
     <style>
+        /* Styles globaux */
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f9f9f9;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f9;
             color: #333;
+            margin: 0;
+            padding: 0;
         }
+
         header {
-            text-align: center;
+            background-color: #2b2d42;
+            color: #ffffff;
             padding: 20px 0;
-            background-color: #007bff;
-            color: white;
-            border-radius: 5px;
-            margin-bottom: 20px;
+            text-align: center;
         }
+
         header h1 {
             margin: 0;
+            font-size: 24px;
+            font-weight: 700;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            background-color: white;
-            border-radius: 10px;
-            overflow: hidden;
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: left;
-        }
-        th {
-            background-color: #007bff;
-            color: white;
-        }
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-        tr:hover {
-            background-color: #e9ecef;
-        }
-        .pagination {
-            margin-top: 20px;
-            text-align: center;
-        }
-        .pagination a {
-            margin: 0 5px;
-            padding: 8px 12px;
-            border: 1px solid #ddd;
-            text-decoration: none;
-            color: #007bff;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-        .pagination a:hover {
-            background-color: #007bff;
-            color: white;
-        }
-        .pagination a.active {
-            background-color: #0056b3;
-            color: white;
-            border: 1px solid #0056b3;
-        }
+
+        /* Barre de recherche */
         .search-bar {
-            text-align: center;
             margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
+
         .search-bar input[type="text"] {
             width: 300px;
             padding: 10px;
             border: 1px solid #ccc;
-            border-radius: 5px;
+            border-radius: 4px;
             font-size: 14px;
+            margin-right: 10px;
         }
+
         .search-bar button {
-            padding: 10px 20px;
-            background-color: #007bff;
+            background-color: #ef233c;
             color: white;
             border: none;
-            border-radius: 5px;
-            cursor: pointer;
+            padding: 10px 20px;
+            border-radius: 4px;
             font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
         }
+
         .search-bar button:hover {
-            background-color: #0056b3;
+            background-color: #d90429;
+        }
+
+        /* Tableau */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #2b2d42;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f4f4f9;
+        }
+
+        tr:hover {
+            background-color: #edf2f4;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .pagination a {
+            margin: 0 5px;
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #2b2d42;
+            font-weight: bold;
+        }
+
+        .pagination a:hover {
+            background-color: #8d99ae;
+            color: white;
+        }
+
+        .pagination a.active {
+            background-color: #ef233c;
+            color: white;
+            border-color: #ef233c;
+        }
+
+        /* Accessibilité */
+        .pagination a:focus, .search-bar button:focus, input[type="text"]:focus {
+            outline: 2px solid #2b2d42;
+            outline-offset: 2px;
         }
     </style>
 </head>
 <body>
-    <!-- <header>
-        <h1>Template Title</h1>
-    </header> -->
-    <div class="content">
-        <header>
-            <h1>Liste des Villes</h1>
-        </header>
+    <header>
+        <h1>Liste des Villes</h1>
+    </header>
+    <div class="container">
+        <!-- Barre de recherche -->
         <div class="search-bar">
             <form method="get" action="/villes">
                 <input type="text" name="search" placeholder="Rechercher une ville..." value="{{ search_query }}">
                 <button type="submit">Rechercher</button>
             </form>
         </div>
-        <div class="content">
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nom</th>
-                        <th>Département</th>
-                        <th>Code Postal</th>
-                        <th>Population</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for ville in villes %}
-                    <tr>
-                        <td>{{ ville.ville_id }}</td>
-                        <td>{{ ville.ville_nom_reel }}</td>
-                        <td>{{ ville.ville_departement }}</td>
-                        <td>{{ ville.ville_code_postal }}</td>
-                        <td>{{ ville.ville_population_2010 }}</td>
-                    </tr>
-                    {% else %}
-                    <tr>
-                        <td colspan="5" style="text-align: center;">Aucune ville correspondante.</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        
-            <div class="pagination">
-                {% if page > 1 %}
-                <a href="?search={{ search_query }}&page={{ page - 1 }}">Précédent</a>
-                {% endif %}
-        
-                {% set start_page = max(1, page - 5) %}
-                {% set end_page = min(total_pages, page + 5) %}
-        
-                {% if start_page > 1 %}
-                <a href="?search={{ search_query }}&page=1">1</a>
-                {% if start_page > 2 %}
-                <span>...</span>
-                {% endif %}
-                {% endif %}
-        
-                {% for p in range(start_page, end_page + 1) %}
-                <a href="?search={{ search_query }}&page={{ p }}" class="{{ 'active' if p == page else '' }}">{{ p }}</a>
+
+        <!-- Tableau -->
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nom</th>
+                    <th>Département</th>
+                    <th>Code Postal</th>
+                    <th>Population</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ville in villes %}
+                <tr>
+                    <td>{{ ville.ville_id }}</td>
+                    <td>{{ ville.ville_nom_reel }}</td>
+                    <td>{{ ville.ville_departement }}</td>
+                    <td>{{ ville.ville_code_postal }}</td>
+                    <td>{{ ville.ville_population_2010 }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" style="text-align: center;">Aucune ville correspondante.</td>
+                </tr>
                 {% endfor %}
-        
-                {% if end_page < total_pages %}
-                {% if end_page < total_pages - 1 %}
-                <span>...</span>
-                {% endif %}
-                <a href="?search={{ search_query }}&page={{ total_pages }}">{{ total_pages }}</a>
-                {% endif %}
-        
-                {% if page < total_pages %}
-                <a href="?search={{ search_query }}&page={{ page + 1 }}">Suivant</a>
-                {% endif %}
-            </div>
-        </div>        
+            </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <div class="pagination">
+            {% if page > 1 %}
+            <a href="?search={{ search_query }}&page={{ page - 1 }}">Précédent</a>
+            {% endif %}
+
+            {% set start_page = max(1, page - 5) %}
+            {% set end_page = min(total_pages, page + 5) %}
+
+            {% if start_page > 1 %}
+            <a href="?search={{ search_query }}&page=1">1</a>
+            {% if start_page > 2 %}
+            <span>...</span>
+            {% endif %}
+            {% endif %}
+
+            {% for p in range(start_page, end_page + 1) %}
+            <a href="?search={{ search_query }}&page={{ p }}" class="{{ 'active' if p == page else '' }}">{{ p }}</a>
+            {% endfor %}
+
+            {% if end_page < total_pages %}
+            {% if end_page < total_pages - 1 %}
+            <span>...</span>
+            {% endif %}
+            <a href="?search={{ search_query }}&page={{ total_pages }}">{{ total_pages }}</a>
+            {% endif %}
+
+            {% if page < total_pages %}
+            <a href="?search={{ search_query }}&page={{ page + 1 }}">Suivant</a>
+            {% endif %}
+        </div>
     </div>
 </body>
 </html>
