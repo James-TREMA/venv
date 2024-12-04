@@ -1,3 +1,6 @@
+from peewee import *
+from Model.base import BaseModel
+
 class MockData(BaseModel):
     id = AutoField()
     first_name = CharField(max_length=255)

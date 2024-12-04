@@ -1,3 +1,6 @@
+from peewee import *
+from Model.base import BaseModel
+
 class Departement(BaseModel):
     departement_id = AutoField()
     departement_code = CharField(max_length=10)

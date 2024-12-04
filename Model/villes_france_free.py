@@ -1,3 +1,6 @@
+from peewee import *
+from Model.base import BaseModel
+
 class VillesFranceFree(BaseModel):
     ville_id = AutoField()
     ville_departement = CharField(max_length=10)
