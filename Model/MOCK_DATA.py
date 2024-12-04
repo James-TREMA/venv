@@ -1,7 +1,7 @@
 from peewee import *
 from Model.base import BaseModel
 
-class MockData(Model):
+class MockData(BaseModel):
     id = AutoField()
     first_name = CharField(max_length=50, null=False)
     last_name = CharField(max_length=50, null=False)

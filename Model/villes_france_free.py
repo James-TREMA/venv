@@ -1,7 +1,7 @@
 from peewee import *
 from Model.base import BaseModel
 
-class VillesFranceFree(Model):
+class VillesFranceFree(BaseModel):
     ville_id = AutoField()
     ville_departement = CharField(max_length=10, null=False)
     ville_slug = CharField(max_length=255, null=False)
