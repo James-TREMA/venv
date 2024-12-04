@@ -33,11 +33,13 @@ def handle_error(message, status_code=404):
 
 # Routes API
 
+# Route pour afficher tous les départements
 @app.route('/departements', methods=['GET'])
 def display_departements():
     departments = Departement.select()
     return render_template('departements.html', departments=departments)
 
+# Route pour récupérer un département par ID
 @app.route('/api/departements/<int:departement_id>', methods=['GET'])
 def get_departement_by_id(departement_id):
     try:
@@ -45,11 +47,15 @@ def get_departement_by_id(departement_id):
         return jsonify({
             "departement_id": departement.departement_id,
             "departement_code": departement.departement_code,
-            "departement_name": departement.departement_name,
+            "departement_nom": departement.departement_nom,
+            "departement_nom_uppercase": departement.departement_nom_uppercase,
+            "departement_slug": departement.departement_slug,
+            "departement_nom_soundex": departement.departement_nom_soundex,
         })
     except Departement.DoesNotExist:
         return handle_error(f"Département avec l'ID {departement_id} non trouvé")
 
+# Route pour récupérer un département par code
 @app.route('/api/departements/code/<string:departement_code>', methods=['GET'])
 def get_departement_by_code(departement_code):
     try:
@@ -57,44 +63,29 @@ def get_departement_by_code(departement_code):
         return jsonify({
             "departement_id": departement.departement_id,
             "departement_code": departement.departement_code,
-            "departement_name": departement.departement_name,
+            "departement_nom": departement.departement_nom,
+            "departement_nom_uppercase": departement.departement_nom_uppercase,
+            "departement_slug": departement.departement_slug,
+            "departement_nom_soundex": departement.departement_nom_soundex,
         })
     except Departement.DoesNotExist:
         return handle_error(f"Département avec le code {departement_code} non trouvé")
 
+# Route pour récupérer les villes d’un département
 @app.route('/api/villes/departement/<string:departement_code>', methods=['GET'])
 def get_villes_by_departement(departement_code):
     villes = VillesFranceFree.select().where(VillesFranceFree.ville_departement == departement_code)
     return jsonify([{
         "ville_id": ville.ville_id,
         "ville_departement": ville.ville_departement,
-        "ville_nom": ville.ville_nom,
+        "ville_slug": ville.ville_slug,
+        "ville_nom_simple": ville.ville_nom_simple,
+        "ville_nom_reel": ville.ville_nom_reel,
         "ville_code_postal": ville.ville_code_postal,
-        "ville_population": ville.ville_population,
+        "ville_population": ville.ville_population_2010,
     } for ville in villes]) if villes else handle_error("Aucune ville trouvée pour ce département")
 
-@app.route('/api/villes/nom/<string:ville_nom>', methods=['GET'])
-def get_villes_by_nom(ville_nom):
-    villes = VillesFranceFree.select().where(VillesFranceFree.ville_nom == ville_nom)
-    return jsonify([{
-        "ville_id": ville.ville_id,
-        "ville_departement": ville.ville_departement,
-        "ville_nom": ville.ville_nom,
-        "ville_code_postal": ville.ville_code_postal,
-        "ville_population": ville.ville_population,
-    } for ville in villes]) if villes else handle_error("Aucune ville trouvée")
-
-@app.route('/api/villes/code_postal/<string:code_postal>', methods=['GET'])
-def get_villes_by_code_postal(code_postal):
-    villes = VillesFranceFree.select().where(VillesFranceFree.ville_code_postal == code_postal)
-    return jsonify([{
-        "ville_id": ville.ville_id,
-        "ville_departement": ville.ville_departement,
-        "ville_nom": ville.ville_nom,
-        "ville_code_postal": ville.ville_code_postal,
-        "ville_population": ville.ville_population,
-    } for ville in villes]) if villes else handle_error("Aucune ville trouvée")
-
+# Route pour récupérer les données Mock
 @app.route('/api/mock_data', methods=['GET'])
 def get_mock_data():
     data = MockData.select()
@@ -107,21 +98,7 @@ def get_mock_data():
         "ip_address": record.ip_address,
     } for record in data])
 
-@app.route('/api/mock_data/<int:record_id>', methods=['GET'])
-def get_mock_data_by_id(record_id):
-    try:
-        record = MockData.get(MockData.id == record_id)
-        return jsonify({
-            "id": record.id,
-            "first_name": record.first_name,
-            "last_name": record.last_name,
-            "email": record.email,
-            "gender": record.gender,
-            "ip_address": record.ip_address,
-        })
-    except MockData.DoesNotExist:
-        return handle_error(f"Enregistrement avec l'ID {record_id} non trouvé")
-
+# Route pour ajouter un enregistrement Mock
 @app.route('/api/mock_data', methods=['POST'])
 def add_mock_data():
     data = request.get_json()
@@ -134,6 +111,7 @@ def add_mock_data():
     )
     return jsonify({"message": "Enregistrement ajouté avec succès", "id": new_record.id}), 201
 
+# Route pour mettre à jour un enregistrement Mock
 @app.route('/api/mock_data/<int:record_id>', methods=['PUT'])
 def update_mock_data(record_id):
     try:
@@ -149,6 +127,7 @@ def update_mock_data(record_id):
     except MockData.DoesNotExist:
         return handle_error(f"Enregistrement avec l'ID {record_id} non trouvé")
 
+# Route pour supprimer un enregistrement Mock
 @app.route('/api/mock_data/<int:record_id>', methods=['DELETE'])
 def delete_mock_data(record_id):
     try:
