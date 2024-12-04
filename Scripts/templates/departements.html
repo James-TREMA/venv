@@ -4,13 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Liste des Départements</title>
+    <!-- Lien vers le fichier CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 
 <body>
-    {% for department in departments %}
-    <label>{{department["departement_nom"]}}</label>
-    {% endfor %}
+    <div class="container">
+        <h1>Liste des Départements</h1>
+        <ul class="departments-list">
+            {% for department in departments %}
+            <li class="department-item">{{ department["departement_nom"] }}</li>
+            {% endfor %}
+        </ul>
+    </div>
 </body>
 
 </html>

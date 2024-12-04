@@ -1,0 +1,45 @@
+/* Styles de base */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+/* Conteneur principal */
+.container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+}
+
+/* Titre */
+h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: #007BFF;
+    text-align: center;
+}
+
+/* Liste des départements */
+.departments-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.department-item {
+    padding: 10px;
+    margin: 5px 0;
+    border-bottom: 1px solid #ddd;
+    font-size: 1.2em;
+    transition: background-color 0.3s ease;
+}
+
+.department-item:hover {
+    background-color: #f0f0f0;
+    cursor: pointer;
+}
