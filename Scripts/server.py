@@ -34,12 +34,12 @@ def handle_error(message, status_code=404):
     return jsonify({"error": message}), status_code
 
 # Routes API
-@app.route('/api/departements', methods=['GET'])
-def get_departements():
+@app.route('/departements', methods=['GET'])
+def display_departements():
     with DatabaseConnection() as cursor:
         cursor.execute("SELECT * FROM departement")
         result = cursor.fetchall()
-    return jsonify(result) if result else handle_error("Aucun département trouvé")
+    return render_template('departements.html', departments=result)
 
 @app.route('/api/departements/<int:departement_id>', methods=['GET'])
 def get_departement_by_id(departement_id):
