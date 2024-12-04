@@ -37,8 +37,25 @@ def display_departements():
 
 @app.route('/villes', methods=['GET'])
 def display_villes():
-    villes = VillesFranceFree.select()
-    return render_template('villes.html', villes=villes)
+    # Paramètres pour la recherche et la pagination
+    search_query = request.args.get('search', '').strip()
+    page = int(request.args.get('page', 1))
+    per_page = 50
+    offset = (page - 1) * per_page
+
+    # Filtrer les villes selon le mot-clé de recherche
+    query = VillesFranceFree.select()
+    if search_query:
+        query = query.where(VillesFranceFree.ville_nom_reel.contains(search_query))
+
+    villes = query.limit(per_page).offset(offset)
+
+    # Compter le nombre total de villes pour la pagination
+    total_villes = query.count()
+    total_pages = (total_villes // per_page) + (1 if total_villes % per_page > 0 else 0)
+
+    return render_template('villes.html', villes=villes, page=page, total_pages=total_pages, search_query=search_query)
+
 
 @app.route('/mock_data', methods=['GET'])
 def display_mock_data():
