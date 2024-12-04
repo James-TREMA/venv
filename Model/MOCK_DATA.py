@@ -1,13 +1,14 @@
 from peewee import *
-from Model.base import BaseModel
+from Scripts.server import database  # Reuse the database connection from server.py
 
-class MockData(BaseModel):
+class MockData(Model):
     id = AutoField()
-    first_name = CharField(max_length=255)
-    last_name = CharField(max_length=255)
-    email = CharField(max_length=255)
-    gender = CharField(max_length=50)
-    ip_address = CharField(max_length=50)
+    first_name = CharField(max_length=50, null=False)
+    last_name = CharField(max_length=50, null=False)
+    email = CharField(max_length=50, null=False)
+    gender = CharField(max_length=50, null=False)
+    ip_address = CharField(max_length=20, null=False)
 
     class Meta:
+        database = database
         table_name = 'MOCK_DATA'
