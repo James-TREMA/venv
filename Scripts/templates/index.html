@@ -1,37 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <!-- <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}"> -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
 </head>
-
 <body>
-  <div class="table-container">
-    <table>
-      <thead>
-        <tr>
-          <th>Email</th>
-          <th>Last Name</th>
-          <th>First Name</th>
-          <th>Gender</th>
-          <th>IP Address</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for user in users %}
-        <tr>
-          <td>{{ user["email"] }}</td>
-          <td>{{ user["last_name"] }}</td>
-          <td>{{ user["first_name"] }}</td>
-          <td>{{ user["gender"] }}</td>
-          <td>{{ user["ip_address"] }}</td>
-        </tr>
-        {% else %}
-        <li>No users yet. Add some!</li>
-        {% endfor %}
+    
 </body>
-
 </html>

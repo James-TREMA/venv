@@ -27,12 +27,7 @@ def handle_error(message, status_code=404):
 
 @app.route('/')
 def home():
-    # Exemple pour passer des utilisateurs fictifs
-    users = [
-        {"email": "johndoe@example.com", "last_name": "Doe", "first_name": "John", "gender": "Male", "ip_address": "192.168.1.1"},
-        {"email": "janedoe@example.com", "last_name": "Doe", "first_name": "Jane", "gender": "Female", "ip_address": "192.168.1.2"}
-    ]
-    return render_template('index.html', users=users)
+    return render_template('index.html')
 
 # Route pour afficher tous les départements
 @app.route('/departements', methods=['GET'])
