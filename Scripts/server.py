@@ -3,18 +3,10 @@ from peewee import *
 from Model.departement import Departement
 from Model.villes_france_free import VillesFranceFree
 from Model.MOCK_DATA import MockData
+from Model.base import database
 
 # Configuration Flask
 app = Flask(__name__)
-
-# Connexion Peewee
-database = MySQLDatabase(
-    'francedb',
-    user='root',
-    password='root',
-    host='localhost',
-    charset='utf8mb4'
-)
 
 # Middleware pour gérer les connexions Peewee
 @app.before_request
