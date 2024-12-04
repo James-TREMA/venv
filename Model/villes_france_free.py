@@ -30,5 +30,4 @@ class VillesFranceFree(BaseModel):
     ville_zmax = IntegerField(null=True)
 
     class Meta:
-        database = database
         table_name = 'villes_france_free'

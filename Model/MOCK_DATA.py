@@ -10,5 +10,4 @@ class MockData(BaseModel):
     ip_address = CharField(max_length=20, null=False)
 
     class Meta:
-        database = database
         table_name = 'MOCK_DATA'
