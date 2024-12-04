@@ -4,6 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liste des Départements</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+    </style>
 </head>
 <body>
     <h1>Liste des Départements</h1>
@@ -13,6 +35,9 @@
                 <th>ID</th>
                 <th>Code</th>
                 <th>Nom</th>
+                <th>Nom (Uppercase)</th>
+                <th>Slug</th>
+                <th>Soundex</th>
             </tr>
         </thead>
         <tbody>
@@ -21,6 +46,13 @@
                 <td>{{ dept.departement_id }}</td>
                 <td>{{ dept.departement_code }}</td>
                 <td>{{ dept.departement_nom }}</td>
+                <td>{{ dept.departement_nom_uppercase }}</td>
+                <td>{{ dept.departement_slug }}</td>
+                <td>{{ dept.departement_nom_soundex }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6" style="text-align: center;">Aucun département disponible.</td>
             </tr>
             {% endfor %}
         </tbody>

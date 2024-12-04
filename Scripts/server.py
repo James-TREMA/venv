@@ -34,19 +34,10 @@ def home():
     ]
     return render_template('index.html', users=users)
 
-
 # Route pour afficher tous les départements
 @app.route('/departements', methods=['GET'])
-def get_all_departements():
+def display_departements():
     departments = Departement.select()
-    return jsonify([{
-        "departement_id": dept.departement_id,
-        "departement_code": dept.departement_code,
-        "departement_nom": dept.departement_nom,
-        "departement_nom_uppercase": dept.departement_nom_uppercase,
-        "departement_slug": dept.departement_slug,
-        "departement_nom_soundex": dept.departement_nom_soundex,
-    } for dept in departments])
     return render_template('departements.html', departments=departments)
 
 # Route pour récupérer un département par ID
