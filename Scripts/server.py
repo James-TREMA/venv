@@ -29,11 +29,30 @@ def handle_error(message, status_code=404):
 def home():
     return render_template('index.html')
 
-# Route pour afficher tous les départements
 @app.route('/departements', methods=['GET'])
 def display_departements():
-    departments = Departement.select()
-    return render_template('departements.html', departments=departments)
+    # Paramètres pour la pagination
+    page = int(request.args.get('page', 1))  # Numéro de la page actuelle
+    per_page = 50  # Nombre d'éléments par page
+    offset = (page - 1) * per_page  # Calcul de l'offset
+
+    # Récupération des données
+    query = Departement.select()
+    departments = query.limit(per_page).offset(offset)
+
+    # Calcul du nombre total de pages
+    total_departments = query.count()
+    total_pages = (total_departments // per_page) + (1 if total_departments % per_page > 0 else 0)
+
+    # Rendu du template avec passage explicite de max et min
+    return render_template(
+        'departements.html',
+        departments=departments,
+        page=page,
+        total_pages=total_pages,
+        max=max,
+        min=min
+    )
 
 @app.route('/villes', methods=['GET'])
 def display_villes():
