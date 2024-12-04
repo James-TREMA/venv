@@ -1,23 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liste des Départements</title>
-    <!-- Lien vers le fichier CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-
 <body>
-    <div class="container">
-        <h1>Liste des Départements</h1>
-        <ul class="departments-list">
-            {% for department in departments %}
-            <li class="department-item">{{ department["departement_nom"] }}</li>
+    <h1>Liste des Départements</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Code</th>
+                <th>Nom</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for dept in departments %}
+            <tr>
+                <td>{{ dept.departement_id }}</td>
+                <td>{{ dept.departement_code }}</td>
+                <td>{{ dept.departement_nom }}</td>
+            </tr>
             {% endfor %}
-        </ul>
-    </div>
+        </tbody>
+    </table>
 </body>
-
 </html>
