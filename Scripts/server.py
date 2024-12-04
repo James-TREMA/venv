@@ -54,7 +54,16 @@ def display_villes():
     total_villes = query.count()
     total_pages = (total_villes // per_page) + (1 if total_villes % per_page > 0 else 0)
 
-    return render_template('villes.html', villes=villes, page=page, total_pages=total_pages, search_query=search_query)
+    # Passer max et min dans le contexte
+    return render_template(
+        'villes.html',
+        villes=villes,
+        page=page,
+        total_pages=total_pages,
+        search_query=search_query,
+        max=max,
+        min=min
+    )
 
 
 @app.route('/mock_data', methods=['GET'])

@@ -3,59 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Liste des Départements</title>
+    <title>Template Title</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        header h1 {
+            margin: 0;
         }
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         th, td {
-            border: 1px solid #ccc;
-            padding: 8px;
+            border: 1px solid #ddd;
+            padding: 12px;
             text-align: left;
         }
         th {
-            background-color: #f4f4f4;
+            background-color: #007bff;
+            color: white;
         }
         tr:nth-child(even) {
-            background-color: #f9f9f9;
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #e9ecef;
+        }
+        .pagination {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .pagination a {
+            margin: 0 5px;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            text-decoration: none;
+            color: #007bff;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .pagination a:hover {
+            background-color: #007bff;
+            color: white;
+        }
+        .pagination a.active {
+            background-color: #0056b3;
+            color: white;
+            border: 1px solid #0056b3;
+        }
+        .search-bar {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .search-bar input[type="text"] {
+            width: 300px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .search-bar button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .search-bar button:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
-    <h1>Liste des Départements</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Code</th>
-                <th>Nom</th>
-                <th>Nom (Uppercase)</th>
-                <th>Slug</th>
-                <th>Soundex</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for dept in departments %}
-            <tr>
-                <td>{{ dept.departement_id }}</td>
-                <td>{{ dept.departement_code }}</td>
-                <td>{{ dept.departement_nom }}</td>
-                <td>{{ dept.departement_nom_uppercase }}</td>
-                <td>{{ dept.departement_slug }}</td>
-                <td>{{ dept.departement_nom_soundex }}</td>
-            </tr>
-            {% else %}
-            <tr>
-                <td colspan="6" style="text-align: center;">Aucun département disponible.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <!-- <header>
+        <h1>Template Title</h1>
+    </header> -->
+    <div class="content">
+        <header>
+            <h1>Liste des Départements</h1>
+        </header>
+        <div class="content">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Code</th>
+                        <th>Nom</th>
+                        <th>Nom (Uppercase)</th>
+                        <th>Slug</th>
+                        <th>Soundex</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for dept in departments %}
+                    <tr>
+                        <td>{{ dept.departement_id }}</td>
+                        <td>{{ dept.departement_code }}</td>
+                        <td>{{ dept.departement_nom }}</td>
+                        <td>{{ dept.departement_nom_uppercase }}</td>
+                        <td>{{ dept.departement_slug }}</td>
+                        <td>{{ dept.departement_nom_soundex }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" style="text-align: center;">Aucun département disponible.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>        
+    </div>
 </body>
 </html>

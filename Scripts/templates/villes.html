@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Liste des Villes</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -11,32 +10,16 @@
             background-color: #f9f9f9;
             color: #333;
         }
-        h1 {
+        header {
             text-align: center;
-            color: #444;
-        }
-        form {
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        form input[type="text"] {
-            width: 300px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-        form button {
-            padding: 10px 20px;
+            padding: 20px 0;
             background-color: #007bff;
             color: white;
-            border: none;
             border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
+            margin-bottom: 20px;
         }
-        form button:hover {
-            background-color: #0056b3;
+        header h1 {
+            margin: 0;
         }
         table {
             width: 100%;
@@ -84,75 +67,104 @@
             color: white;
             border: 1px solid #0056b3;
         }
+        .search-bar {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .search-bar input[type="text"] {
+            width: 300px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .search-bar button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .search-bar button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
-    <h1>Liste des Villes</h1>
-
-    <!-- Formulaire de recherche -->
-    <form method="get" action="/villes">
-        <input type="text" name="search" placeholder="Rechercher une ville..." value="{{ search_query }}">
-        <button type="submit">Rechercher</button>
-    </form>
-
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nom</th>
-                <th>Département</th>
-                <th>Code Postal</th>
-                <th>Population</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for ville in villes %}
-            <tr>
-                <td>{{ ville.ville_id }}</td>
-                <td>{{ ville.ville_nom_reel }}</td>
-                <td>{{ ville.ville_departement }}</td>
-                <td>{{ ville.ville_code_postal }}</td>
-                <td>{{ ville.ville_population_2010 }}</td>
-            </tr>
-            {% else %}
-            <tr>
-                <td colspan="5" style="text-align: center;">Aucune ville correspondante.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-    <div class="pagination">
-        {% if page > 1 %}
-        <a href="?search={{ search_query }}&page={{ page - 1 }}">Précédent</a>
-        {% endif %}
-    
-        <!-- Début de la logique pour limiter les numéros de page -->
-        {% set start_page = max(1, page - 5) %}
-        {% set end_page = min(total_pages, page + 5) %}
-    
-        {% if start_page > 1 %}
-        <a href="?search={{ search_query }}&page=1">1</a>
-        {% if start_page > 2 %}
-        <span>...</span>
-        {% endif %}
-        {% endif %}
-    
-        {% for p in range(start_page, end_page + 1) %}
-        <a href="?search={{ search_query }}&page={{ p }}" class="{{ 'active' if p == page else '' }}">{{ p }}</a>
-        {% endfor %}
-    
-        {% if end_page < total_pages %}
-        {% if end_page < total_pages - 1 %}
-        <span>...</span>
-        {% endif %}
-        <a href="?search={{ search_query }}&page={{ total_pages }}">{{ total_pages }}</a>
-        {% endif %}
-        <!-- Fin de la logique -->
-    
-        {% if page < total_pages %}
-        <a href="?search={{ search_query }}&page={{ page + 1 }}">Suivant</a>
-        {% endif %}
-    </div>    
+    <!-- <header>
+        <h1>Template Title</h1>
+    </header> -->
+    <div class="content">
+        <header>
+            <h1>Liste des Villes</h1>
+        </header>
+        <div class="search-bar">
+            <form method="get" action="/villes">
+                <input type="text" name="search" placeholder="Rechercher une ville..." value="{{ search_query }}">
+                <button type="submit">Rechercher</button>
+            </form>
+        </div>
+        <div class="content">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nom</th>
+                        <th>Département</th>
+                        <th>Code Postal</th>
+                        <th>Population</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ville in villes %}
+                    <tr>
+                        <td>{{ ville.ville_id }}</td>
+                        <td>{{ ville.ville_nom_reel }}</td>
+                        <td>{{ ville.ville_departement }}</td>
+                        <td>{{ ville.ville_code_postal }}</td>
+                        <td>{{ ville.ville_population_2010 }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" style="text-align: center;">Aucune ville correspondante.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        
+            <div class="pagination">
+                {% if page > 1 %}
+                <a href="?search={{ search_query }}&page={{ page - 1 }}">Précédent</a>
+                {% endif %}
+        
+                {% set start_page = max(1, page - 5) %}
+                {% set end_page = min(total_pages, page + 5) %}
+        
+                {% if start_page > 1 %}
+                <a href="?search={{ search_query }}&page=1">1</a>
+                {% if start_page > 2 %}
+                <span>...</span>
+                {% endif %}
+                {% endif %}
+        
+                {% for p in range(start_page, end_page + 1) %}
+                <a href="?search={{ search_query }}&page={{ p }}" class="{{ 'active' if p == page else '' }}">{{ p }}</a>
+                {% endfor %}
+        
+                {% if end_page < total_pages %}
+                {% if end_page < total_pages - 1 %}
+                <span>...</span>
+                {% endif %}
+                <a href="?search={{ search_query }}&page={{ total_pages }}">{{ total_pages }}</a>
+                {% endif %}
+        
+                {% if page < total_pages %}
+                <a href="?search={{ search_query }}&page={{ page + 1 }}">Suivant</a>
+                {% endif %}
+            </div>
+        </div>        
+    </div>
 </body>
 </html>
