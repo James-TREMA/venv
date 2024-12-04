@@ -1,5 +1,5 @@
 from peewee import *
-from Scripts.server import database  # Reuse the database connection from server.py
+from Model.base import BaseModel
 
 class VillesFranceFree(Model):
     ville_id = AutoField()
