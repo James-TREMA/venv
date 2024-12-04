@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mock Data</title>
+</head>
+<body>
+    <h1>Mock Data</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Prénom</th>
+                <th>Nom</th>
+                <th>Email</th>
+                <th>Genre</th>
+                <th>IP Address</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for data in mock_data %}
+            <tr>
+                <td>{{ data.id }}</td>
+                <td>{{ data.first_name }}</td>
+                <td>{{ data.last_name }}</td>
+                <td>{{ data.email }}</td>
+                <td>{{ data.gender }}</td>
+                <td>{{ data.ip_address }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6" style="text-align: center;">Aucune donnée disponible.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

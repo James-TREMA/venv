@@ -40,6 +40,17 @@ def display_departements():
     departments = Departement.select()
     return render_template('departements.html', departments=departments)
 
+@app.route('/villes', methods=['GET'])
+def display_villes():
+    villes = VillesFranceFree.select()
+    return render_template('villes.html', villes=villes)
+
+@app.route('/mock_data', methods=['GET'])
+def display_mock_data():
+    mock_data = MockData.select()
+    return render_template('mock_data.html', mock_data=mock_data)
+
+
 # Route pour récupérer un département par ID
 @app.route('/api/departements/<int:departement_id>', methods=['GET'])
 def get_departement_by_id(departement_id):
