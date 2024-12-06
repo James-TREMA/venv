@@ -35,6 +35,12 @@ def home():
     # Affiche la page d'accueil
     return render_template('index.html')
 
+@app.route('/exercice')
+def exercice():
+    # Affiche la page Exercice
+    return render_template('exercice.html')
+
+
 @app.route('/departements', methods=['GET'])
 def display_departements():
     # Affiche la liste des départements avec pagination
