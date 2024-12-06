@@ -1,106 +1,186 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exercice</title>
-    <style>
-        /* Styles globaux */
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f4f4f9;
-            color: #333;
-            margin: 0;
-            padding: 0;
-        }
-
-        header {
-            background-color: #2b2d42;
-            color: #ffffff;
-            padding: 20px 0;
-            text-align: center;
-        }
-
-        header h1 {
-            margin: 0;
-            font-size: 24px;
-            font-weight: 700;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 20px;
-            background: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Tableau */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        th, td {
-            text-align: left;
-            padding: 10px;
-            border: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #2b2d42;
-            color: white;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f4f4f9;
-        }
-
-        tr:hover {
-            background-color: #edf2f4;
-        }
-
-        /* Pagination */
-        .pagination {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-        }
-
-        .pagination a {
-            margin: 0 5px;
-            padding: 8px 12px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            text-decoration: none;
-            color: #2b2d42;
-            font-weight: bold;
-        }
-
-        .pagination a:hover {
-            background-color: #8d99ae;
-            color: white;
-        }
-
-        .pagination a.active {
-            background-color: #ef233c;
-            color: white;
-            border-color: #ef233c;
-        }
-
-        /* Accessibilité */
-        .pagination a:focus {
-            outline: 2px solid #2b2d42;
-            outline-offset: 2px;
-        }
-    </style>
+    <title>Recherche Avancée - Villes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
+<style>
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #f4f4f9;
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
+
+    header {
+        background-color: #2b2d42;
+        color: white;
+        text-align: center;
+        padding: 20px;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 20px auto;
+        padding: 20px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    form {
+        display: grid;
+        gap: 15px;
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    label {
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    input, select, button {
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+
+    button {
+        background-color: #2b2d42;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #ef233c;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th, td {
+        padding: 10px;
+        border: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #2b2d42;
+        color: white;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    tr:hover {
+        background-color: #f1f1f1;
+    }
+</style>
 <body>
-    <header>
-        <h1>Exercice</h1>
+    <header class="bg-dark text-white text-center py-3">
+        <h1>Recherche Avancée de Villes</h1>
     </header>
- 
+    <div class="container my-4">
+        <form method="POST" action="/exercice" class="row g-3">
+            <!-- Nom de la ville -->
+            <div class="col-md-4">
+                <label for="search_nom" class="form-label">Nom de la ville</label>
+                <input type="text" id="search_nom" name="search_nom" class="form-control" placeholder="Exemple : Paris">
+            </div>
+
+            <!-- Département -->
+            <div class="col-md-4">
+                <label for="search_departement" class="form-label">Département</label>
+                <select id="search_departement" name="search_departement" class="form-select">
+                    <option value="">-- Sélectionnez un département --</option>
+                    {% for departement in departements %}
+                    <option value="{{ departement.ville_departement }}">{{ departement.ville_departement }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Population -->
+            <div class="col-md-4">
+                <label for="search_population" class="form-label">Population</label>
+                <select id="search_population" name="search_population" class="form-select">
+                    <option value="">-- Sélectionnez une option --</option>
+                    <option value="faible">Faible (&lt; 10,000)</option>
+                    <option value="moyenne">Moyenne (10,000 - 50,000)</option>
+                    <option value="élevée">Élevée (&gt; 50,000)</option>
+                </select>
+            </div>
+
+            <!-- Année -->
+            <div class="col-md-4">
+                <label for="search_annee" class="form-label">Année</label>
+                <select id="search_annee" name="search_annee" class="form-select">
+                    <option value="">-- Sélectionnez une année --</option>
+                    <option value="2010">2010</option>
+                    <option value="2012">2012</option>
+                    <option value="1999">1999</option>
+                </select>
+            </div>
+
+            <!-- Surface -->
+            <div class="col-md-4">
+                <label for="search_surface" class="form-label">Surface (max km²)</label>
+                <input type="number" step="0.1" id="search_surface" name="search_surface" class="form-control" placeholder="Exemple : 50">
+            </div>
+
+            <!-- Altitude -->
+            <div class="col-md-4">
+                <label for="search_altitude" class="form-label">Altitude minimum (m)</label>
+                <input type="number" id="search_altitude" name="search_altitude" class="form-control" placeholder="Exemple : 200">
+            </div>
+
+            <!-- Bouton Rechercher -->
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary w-100">Rechercher</button>
+            </div>
+        </form>
+
+        <!-- Résultats -->
+        {% if villes %}
+            <table class="table table-striped mt-4">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Code Postal</th>
+                        <th>Département</th>
+                        <th>Population (Sélectionnée)</th>
+                        <th>Surface (km²)</th>
+                        <th>Altitude (Min/Max)</th>
+                        <th>Longitude</th>
+                        <th>Latitude</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ville in villes %}
+                    <tr>
+                        <td>{{ ville.ville_nom_reel }}</td>
+                        <td>{{ ville.ville_code_postal }}</td>
+                        <td>{{ ville.ville_departement }}</td>
+                        <td>{{ ville.ville_population_2010 if search_annee == '2010' else (ville.ville_population_2012 if search_annee == '2012' else ville.ville_population_1999) }}</td>
+                        <td>{{ ville.ville_surface }}</td>
+                        <td>{{ ville.ville_zmin }} / {{ ville.ville_zmax }}</td>
+                        <td>{{ ville.ville_longitude_deg }}</td>
+                        <td>{{ ville.ville_latitude_deg }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="text-center mt-4">Aucun résultat trouvé.</p>
+        {% endif %}
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

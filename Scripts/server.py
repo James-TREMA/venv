@@ -35,11 +35,61 @@ def home():
     # Affiche la page d'accueil
     return render_template('index.html')
 
-@app.route('/exercice')
-def exercice():
-    # Affiche la page Exercice
-    return render_template('exercice.html')
+@app.route('/createRequete')
+def createRequete():
+    # Affiche la page Create Requete
+    return render_template('createRequete.html')
 
+@app.route('/exercice', methods=['GET', 'POST'])
+def exercice():
+    # Critères de recherche depuis le formulaire
+    search_nom = request.form.get('search_nom', '').strip()
+    search_departement = request.form.get('search_departement', '').strip()
+    search_population = request.form.get('search_population', '').strip()
+    search_annee = request.form.get('search_annee', '').strip()
+    search_surface = request.form.get('search_surface', '').strip()
+    search_altitude = request.form.get('search_altitude', '').strip()
+
+    villes = []  # Liste des résultats
+
+    # Construire la requête
+    query = VillesFranceFree.select()
+
+    # Appliquer les filtres de recherche
+    if search_nom:
+        query = query.where(VillesFranceFree.ville_nom_reel.contains(search_nom))
+    if search_departement:
+        query = query.where(VillesFranceFree.ville_departement == search_departement)
+    if search_annee:
+        population_field = None
+        if search_annee == "2010":
+            population_field = VillesFranceFree.ville_population_2010
+        elif search_annee == "2012":
+            population_field = VillesFranceFree.ville_population_2012
+        elif search_annee == "1999":
+            population_field = VillesFranceFree.ville_population_1999
+        
+        if search_population == "faible":
+            query = query.where(population_field < 10000)
+        elif search_population == "moyenne":
+            query = query.where((population_field >= 10000) & (population_field <= 50000))
+        elif search_population == "élevée":
+            query = query.where(population_field > 50000)
+    if search_surface:
+        query = query.where(VillesFranceFree.ville_surface <= float(search_surface))
+    if search_altitude:
+        query = query.where(VillesFranceFree.ville_zmax >= int(search_altitude))
+
+    villes = query.limit(100)  # Limiter les résultats à 100 pour éviter la surcharge
+
+    # Charger les options pour les menus déroulants
+    departements = VillesFranceFree.select(VillesFranceFree.ville_departement).distinct()
+
+    return render_template(
+        'exercice.html',
+        villes=villes,
+        departements=departements
+    )
 
 @app.route('/departements', methods=['GET'])
 def display_departements():
