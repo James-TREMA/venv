@@ -1,7 +1,7 @@
 @baseUrl = http://localhost:5000
 
 ### Création d'un utilisateur (POST)
-/api/users/ HTTP/1.1
+POST {{baseUrl}}/api/users/
 Content-Type: application/json
 
 {
@@ -15,12 +15,12 @@ Content-Type: application/json
 ###
 
 ### Récupérer tous les utilisateurs (GET)
-/api/users/ HTTP/1.1
+GET {{baseUrl}}/api/users/
 
 ###
 
 ### Mettre à jour partiellement un utilisateur (PATCH)
-/api/users/1 HTTP/1.1
+PATCH {{baseUrl}}/api/users/1
 Content-Type: application/json
 
 {
@@ -31,6 +31,6 @@ Content-Type: application/json
 ###
 
 ### Supprimer un utilisateur par ID (DELETE)
-/api/users/1 HTTP/1.1
+DELETE {{baseUrl}}/api/users/1
 
 ###
