@@ -163,6 +163,41 @@ def get_villes_by_departement(departement_code):
         "ville_population": ville.ville_population_2010,
     } for ville in villes]) if villes else handle_error("Aucune ville trouvée pour ce département")
 
+@app.route('/api/villes/population/<int:annee>/max', methods=['GET'])
+def get_max_population_villes(annee):
+    try:
+        # Récupération des villes avec la population max pour l'année spécifiée
+        villes = VillesFranceFree.select().where(
+            VillesFranceFree.ville_population_annee == annee
+        ).order_by(VillesFranceFree.ville_population.desc()).limit(1)
+        
+        return jsonify([{
+            "ville_id": ville.ville_id,
+            "ville_nom_reel": ville.ville_nom_reel,
+            "ville_population": ville.ville_population,
+            "annee": annee
+        } for ville in villes])
+    except Exception as e:
+        return handle_error(f"Erreur lors de la récupération des données: {str(e)}")
+
+@app.route('/api/departement/population/<int:annee>/average', methods=['GET'])
+def get_average_population_departement(annee):
+    try:
+        # Récupération de la population moyenne par département pour l'année spécifiée
+        query = Departement.select(
+            fn.AVG(VillesFranceFree.ville_population).alias('population_moyenne')
+        ).join(
+            VillesFranceFree, on=(Departement.departement_code == VillesFranceFree.ville_departement)
+        ).where(VillesFranceFree.ville_population_annee == annee)
+        
+        result = query.scalar(as_tuple=True)
+        return jsonify({
+            "annee": annee,
+            "population_moyenne": result[0] if result else 0
+        })
+    except Exception as e:
+        return handle_error(f"Erreur lors de la récupération des données: {str(e)}")
+
 @app.route('/api/mock_data', methods=['GET'])
 def get_mock_data():
     # Retourne toutes les données Mock au format JSON
