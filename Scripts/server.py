@@ -149,50 +149,6 @@ def get_departement_by_code(departement_code):
     except Departement.DoesNotExist:
         return handle_error(f"Département avec le code {departement_code} non trouvé")
 
-@app.route('/villes', methods=['GET'])
-def display_villes():
-    # Recherche et pagination
-    search_query = request.args.get('search', '').strip()
-    page = int(request.args.get('page', 1))
-    per_page = 50
-    offset = (page - 1) * per_page
-
-    # Vérifier si le filtre "Top 10 par population" est activé
-    top_population = request.args.get('top_population', False)
-    year = request.args.get('year', '2010')  # Par défaut, année 2010
-
-    # Query pour récupérer les villes
-    query = VillesFranceFree.select()
-
-    if search_query:
-        query = query.where(VillesFranceFree.ville_nom_reel.contains(search_query))
-
-    if top_population:
-        # Filtrer les 10 villes les plus peuplées pour une année spécifique
-        population_field = f"ville_population_{year}"  # Exemple : ville_population_2010
-        if hasattr(VillesFranceFree, population_field):
-            query = query.order_by(getattr(VillesFranceFree, population_field).desc()).limit(10)
-        else:
-            return handle_error("Données de population indisponibles pour l'année sélectionnée", 400)
-
-    villes = query.limit(per_page).offset(offset)
-
-    # Pagination pour les résultats classiques
-    total_villes = query.count()
-    total_pages = (total_villes // per_page) + (1 if total_villes % per_page > 0 else 0)
-
-    return render_template(
-        'villes.html',
-        villes=villes,
-        page=page,
-        total_pages=total_pages,
-        search_query=search_query,
-        top_population=top_population,
-        year=year,
-        max=max,
-        min=min
-    )
-
 @app.route('/api/villes/departement/<string:departement_code>', methods=['GET'])
 def get_villes_by_departement(departement_code):
     # Retourne les villes associées à un département
