@@ -35,10 +35,69 @@ def home():
     # Affiche la page d'accueil
     return render_template('index.html')
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Route pour la page de création de requêtes
 @app.route('/createRequete')
-def createRequete():
-    # Affiche la page Create Requete
+def create_requete():
     return render_template('createRequete.html')
+
+@app.route('/checkTable', methods=['GET'])
+def check_table():
+    table = request.args.get('table')
+
+    # Vérifiez que le nom de la table n'est pas vide
+    if not table:
+        return jsonify({"exists": False, "error": "Nom de table manquant"}), 400
+
+    try:
+        query = f"SELECT * FROM `{table}` LIMIT 10"  # Utilisez des backticks pour éviter les conflits avec des mots-clés SQL
+        with get_db_connection() as conn:
+            with conn.cursor() as cursor:
+                cursor.execute(query)
+                rows = cursor.fetchall()
+                columns = [col[0] for col in cursor.description]  # Récupérer les noms des colonnes
+        if rows:
+            return jsonify({"exists": True, "columns": columns, "rows": rows})
+        else:
+            return jsonify({"exists": True, "columns": columns, "rows": []})  # Table vide
+    except Error as e:
+        # Capture et renvoyez l'erreur
+        return jsonify({"exists": False, "error": str(e)}), 500
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 @app.route('/exercice', methods=['GET', 'POST'])
 def exercice():

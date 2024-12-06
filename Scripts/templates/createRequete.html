@@ -1,1 +1,126 @@
-<!-- Ici le code  -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Créer une Requête SQL</title>
+    <style>
+        .sql-builder {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        select {
+            padding: 5px;
+            font-size: 14px;
+        }
+
+        .message {
+            margin-top: 20px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .table-preview {
+            margin-top: 20px;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .table-preview th, .table-preview td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        .table-preview th {
+            background-color: #f4f4f4;
+        }
+    </style>
+    <script>
+async function updateQuery() {
+    const selectValue = document.getElementById("operation").value;
+    const tableValue = document.getElementById("table").value;
+    const queryPreview = document.getElementById("query-preview");
+    const message = document.getElementById("message");
+    const tablePreview = document.getElementById("table-preview");
+
+    // Mettre à jour la requête affichée
+    queryPreview.textContent = `SELECT ${selectValue} FROM ${tableValue}`;
+
+    // Réinitialiser les messages et le tableau
+    message.textContent = "";
+    tablePreview.innerHTML = "";
+
+    // Vérifier si une table a été sélectionnée
+    if (tableValue) {
+        try {
+            const response = await fetch(`/checkTable?table=${tableValue}`);
+            const data = await response.json();
+
+            if (data.exists) {
+                if (data.rows.length > 0) {
+                    message.textContent = `La table "${tableValue}" existe et contient des données. Voici les 10 premières lignes :`;
+
+                    // Afficher les colonnes et les données
+                    const headerRow = document.createElement("tr");
+                    data.columns.forEach(col => {
+                        const th = document.createElement("th");
+                        th.textContent = col;
+                        headerRow.appendChild(th);
+                    });
+                    tablePreview.appendChild(headerRow);
+
+                    data.rows.forEach(row => {
+                        const rowElement = document.createElement("tr");
+                        row.forEach(cell => {
+                            const td = document.createElement("td");
+                            td.textContent = cell;
+                            rowElement.appendChild(td);
+                        });
+                        tablePreview.appendChild(rowElement);
+                    });
+                } else {
+                    message.textContent = `La table "${tableValue}" existe, mais elle est vide.`;
+                }
+            } else {
+                message.textContent = `Erreur : ${data.error}`;
+            }
+        } catch (error) {
+            message.textContent = `Erreur de communication avec le serveur : ${error.message}`;
+        }
+    }
+}
+</script>
+</head>
+<body>
+    <h1>Créer une Requête SQL</h1>
+    <div class="sql-builder">
+        <label for="operation">SELECT :</label>
+        <select id="operation" onchange="updateQuery()">
+            <option value="*">Tout (*)</option>
+            <option value="avg">Moyenne (AVG)</option>
+            <option value="max">Maximum (MAX)</option>
+            <option value="min">Minimum (MIN)</option>
+        </select>
+
+        <label for="table">Table :</label>
+        <select id="table" onchange="updateQuery()">
+            <option value="">-- Choisir une table --</option>
+            <option value="departement">Département</option>
+            <option value="villes_france_free">Villes</option>
+            <option value="MOCK_DATA">Mock Data</option>
+        </select>
+    </div>
+    <div id="query-preview" class="query-preview" style="margin-top: 20px; font-family: monospace;">SELECT ... FROM ...</div>
+    <div id="message" class="message"></div>
+    <table id="table-preview" class="table-preview"></table>
+</body>
+</html>
