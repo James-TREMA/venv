@@ -135,12 +135,21 @@
     </header>
     <div class="container">
         <!-- Barre de recherche -->
-        <div class="search-bar">
-            <form method="get" action="/villes">
-                <input type="text" name="search" placeholder="Rechercher une ville..." value="{{ search_query }}">
-                <button type="submit">Rechercher</button>
-            </form>
-        </div>
+    <!-- Ajout de la section pour filtrer les villes par population -->
+    <div class="search-bar">
+        <form method="get" action="/villes">
+            <input type="text" name="search" placeholder="Rechercher une ville..." value="{{ search_query }}">
+            <label for="population_checkbox">
+                <input type="checkbox" id="population_checkbox" name="top_population" value="1" {{ 'checked' if top_population }}> Top 10 par population
+            </label>
+            <select name="year">
+                <option value="2010" {{ 'selected' if year == '2010' }}>2010</option>
+                <option value="2000" {{ 'selected' if year == '2000' }}>2000</option>
+                <option value="1990" {{ 'selected' if year == '1990' }}>1990</option>
+            </select>
+            <button type="submit">Rechercher</button>
+        </form>
+    </div>
 
         <!-- Tableau -->
         <table>
