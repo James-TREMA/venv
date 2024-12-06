@@ -24,6 +24,7 @@ PATCH {{baseUrl}}/api/users/1
 Content-Type: application/json
 
 {
+  "id": 1,
   "first_name": "Jonathan",
   "email": "jonathan.doe@example.com"
 }
