@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 from werkzeug.security import generate_password_hash
-from Model.users import User
+from Model.MOCK_DATA import MockData  # Exemple d'utilisation de la base actuelle
 from peewee import IntegrityError
 
 # Création du blueprint pour les routes utilisateurs
@@ -9,41 +9,67 @@ users_bp = Blueprint('users', __name__, url_prefix='/api/users')
 # === Création d'un utilisateur ===
 @users_bp.route('/', methods=['POST'])
 def create_user():
-    """
-    Route pour créer un nouvel utilisateur.
-    """
+    # Ajoute un nouvel utilisateur
     try:
-        # Récupération des données envoyées par le client
         data = request.get_json()
-        username = data.get('username')
+        first_name = data.get('first_name')
+        last_name = data.get('last_name')
         email = data.get('email')
-        password = data.get('password')
+        gender = data.get('gender')
+        ip_address = data.get('ip_address')
 
         # Validation des données
-        if not username or not email or not password:
-            return jsonify({"error": "Tous les champs sont obligatoires (username, email, password)."}), 400
+        if not all([first_name, last_name, email, gender, ip_address]):
+            return jsonify({"error": "Tous les champs sont obligatoires."}), 400
 
         # Création de l'utilisateur
-        hashed_password = generate_password_hash(password)
-        new_user = User.create(
-            username=username,
+        new_user = MockData.create(
+            first_name=first_name,
+            last_name=last_name,
             email=email,
-            password=hashed_password
+            gender=gender,
+            ip_address=ip_address
         )
+
         return jsonify({
             "message": "Utilisateur créé avec succès.",
             "user": {
                 "id": new_user.id,
-                "username": new_user.username,
+                "first_name": new_user.first_name,
+                "last_name": new_user.last_name,
                 "email": new_user.email,
-                "created_at": new_user.created_at
+                "gender": new_user.gender,
+                "ip_address": new_user.ip_address
             }
         }), 201
 
-    except IntegrityError as e:
-        # Gérer les erreurs de doublon
-        return jsonify({"error": "Le nom d'utilisateur ou l'email existe déjà."}), 409
+    except IntegrityError:
+        return jsonify({"error": "Un utilisateur avec cet email existe déjà."}), 409
 
     except Exception as e:
-        # Gestion des erreurs générales
-        return jsonify({"error": "Une erreur est survenue lors de la création de l'utilisateur."}), 500
+        return jsonify({"error": f"Erreur lors de la création : {str(e)}"}), 500
+
+# === Obtenir tous les utilisateurs ===
+@users_bp.route('/', methods=['GET'])
+def get_all_users():
+    # Retourne tous les utilisateurs
+    users = MockData.select()
+    return jsonify([{
+        "id": user.id,
+        "first_name": user.first_name,
+        "last_name": user.last_name,
+        "email": user.email,
+        "gender": user.gender,
+        "ip_address": user.ip_address
+    } for user in users])
+
+# === Supprimer un utilisateur par ID ===
+@users_bp.route('/<int:user_id>', methods=['DELETE'])
+def delete_user(user_id):
+    # Supprime un utilisateur par ID
+    try:
+        user = MockData.get(MockData.id == user_id)
+        user.delete_instance()
+        return jsonify({"message": "Utilisateur supprimé avec succès."}), 200
+    except MockData.DoesNotExist:
+        return jsonify({"error": "Utilisateur non trouvé."}), 404

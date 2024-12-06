@@ -4,9 +4,11 @@ from Model.departement import Departement
 from Model.villes_france_free import VillesFranceFree
 from Model.MOCK_DATA import MockData
 from Model.base import database
+from Scripts.users import users_bp
 
 # === Configuration de l'application Flask ===
 app = Flask(__name__)
+app.register_blueprint(users_bp)
 
 # === Gestion des connexions Peewee ===
 @app.before_request
