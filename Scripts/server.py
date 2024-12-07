@@ -5,6 +5,7 @@ from Model.villes_france_free import VillesFranceFree
 from Model.MOCK_DATA import MockData
 from Model.base import database
 from Scripts.users import users_bp
+from mysql.connector import Error
 
 # === Configuration de l'application Flask ===
 app = Flask(__name__)
