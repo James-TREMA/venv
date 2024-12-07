@@ -57,9 +57,9 @@ def home():
 
 
 # Route pour la page de création de requêtes
-@app.route('/createRequete')
-def create_requete():
-    return render_template('createRequete.html')
+# @app.route('/createRequete')
+# def create_requete():
+#     return render_template('createRequete.html')
 
 @app.route('/checkTable', methods=['GET'])
 def check_table():
