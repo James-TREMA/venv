@@ -65,26 +65,52 @@ def create_requete():
 def check_table():
     table = request.args.get('table')
 
-    # Vérifiez que le nom de la table n'est pas vide
     if not table:
         return jsonify({"exists": False, "error": "Nom de table manquant"}), 400
 
     try:
-        query = f"SELECT * FROM `{table}` LIMIT 10"  # Utilisez des backticks pour éviter les conflits avec des mots-clés SQL
-        with get_db_connection() as conn:
-            with conn.cursor() as cursor:
-                cursor.execute(query)
-                rows = cursor.fetchall()
-                columns = [col[0] for col in cursor.description]  # Récupérer les noms des colonnes
-        if rows:
-            return jsonify({"exists": True, "columns": columns, "rows": rows})
-        else:
-            return jsonify({"exists": True, "columns": columns, "rows": []})  # Table vide
+        query = f"SELECT * FROM `{table}` LIMIT 10"
+        connection = get_db_connection()
+        cursor = connection.cursor()
+        cursor.execute(query)
+        rows = cursor.fetchall()
+        columns = [col[0] for col in cursor.description]
+        cursor.close()
+        connection.close()
+
+        return jsonify({"exists": True, "columns": columns, "rows": rows})
     except Error as e:
-        # Capture et renvoyez l'erreur
         return jsonify({"exists": False, "error": str(e)}), 500
 
+@app.route('/createRequete', methods=['GET', 'POST'])
+def create_requete():
+    selected_table = request.form.get('table')
+    query_preview = None
+    rows = []
+    columns = []
 
+    if selected_table:
+        try:
+            query = f"SELECT * FROM `{selected_table}` LIMIT 10"
+            connection = get_db_connection()
+            cursor = connection.cursor()
+            cursor.execute(query)
+            rows = cursor.fetchall()
+            columns = [col[0] for col in cursor.description]
+            query_preview = f"SELECT * FROM {selected_table}"
+            cursor.close()
+            connection.close()
+        except Error as e:
+            query_preview = f"Erreur : {e}"
+
+    tables = ['departement', 'villes_france_free', 'MOCK_DATA']  # Liste des tables disponibles
+    return render_template(
+        'createRequete.html',
+        tables=tables,
+        query_preview=query_preview,
+        columns=columns,
+        rows=rows
+    )
 
 
 

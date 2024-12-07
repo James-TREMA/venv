@@ -5,122 +5,99 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Créer une Requête SQL</title>
     <style>
-        .sql-builder {
-            display: flex;
-            align-items: center;
-            gap: 15px;
+        body {
             font-family: Arial, sans-serif;
-            font-size: 16px;
+            margin: 20px;
+            line-height: 1.6;
         }
-
-        label {
-            font-weight: bold;
-        }
-
-        select {
-            padding: 5px;
-            font-size: 14px;
-        }
-
-        .message {
-            margin-top: 20px;
-            font-family: Arial, sans-serif;
-            font-size: 14px;
+        h1 {
+            font-size: 24px;
             color: #333;
         }
-
-        .table-preview {
-            margin-top: 20px;
-            border-collapse: collapse;
-            width: 100%;
+        form {
+            margin-bottom: 20px;
         }
-
-        .table-preview th, .table-preview td {
+        label {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        select, button {
+            padding: 5px 10px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .query-preview {
+            margin: 20px 0;
+            font-family: monospace;
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-left: 4px solid #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table th, table td {
             border: 1px solid #ddd;
             padding: 8px;
+            text-align: left;
         }
-
-        .table-preview th {
+        table th {
             background-color: #f4f4f4;
         }
-    </style>
-    <script>
-async function updateQuery() {
-    const selectValue = document.getElementById("operation").value;
-    const tableValue = document.getElementById("table").value;
-    const queryPreview = document.getElementById("query-preview");
-    const message = document.getElementById("message");
-    const tablePreview = document.getElementById("table-preview");
-
-    // Mettre à jour la requête affichée
-    queryPreview.textContent = `SELECT ${selectValue} FROM ${tableValue}`;
-
-    // Réinitialiser les messages et le tableau
-    message.textContent = "";
-    tablePreview.innerHTML = "";
-
-    // Vérifier si une table a été sélectionnée
-    if (tableValue) {
-        try {
-            const response = await fetch(`/checkTable?table=${tableValue}`);
-            const data = await response.json();
-
-            if (data.exists) {
-                if (data.rows.length > 0) {
-                    message.textContent = `La table "${tableValue}" existe et contient des données. Voici les 10 premières lignes :`;
-
-                    // Afficher les colonnes et les données
-                    const headerRow = document.createElement("tr");
-                    data.columns.forEach(col => {
-                        const th = document.createElement("th");
-                        th.textContent = col;
-                        headerRow.appendChild(th);
-                    });
-                    tablePreview.appendChild(headerRow);
-
-                    data.rows.forEach(row => {
-                        const rowElement = document.createElement("tr");
-                        row.forEach(cell => {
-                            const td = document.createElement("td");
-                            td.textContent = cell;
-                            rowElement.appendChild(td);
-                        });
-                        tablePreview.appendChild(rowElement);
-                    });
-                } else {
-                    message.textContent = `La table "${tableValue}" existe, mais elle est vide.`;
-                }
-            } else {
-                message.textContent = `Erreur : ${data.error}`;
-            }
-        } catch (error) {
-            message.textContent = `Erreur de communication avec le serveur : ${error.message}`;
+        .message {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #666;
         }
-    }
-}
-</script>
+    </style>
 </head>
 <body>
     <h1>Créer une Requête SQL</h1>
-    <div class="sql-builder">
-        <label for="operation">SELECT :</label>
-        <select id="operation" onchange="updateQuery()">
-            <option value="*">Tout (*)</option>
-            <option value="avg">Moyenne (AVG)</option>
-            <option value="max">Maximum (MAX)</option>
-            <option value="min">Minimum (MIN)</option>
-        </select>
-
+    <form method="POST">
+        <!-- Menu déroulant pour sélectionner la table -->
         <label for="table">Table :</label>
-        <select id="table" onchange="updateQuery()">
+        <select name="table" id="table" onchange="this.form.submit()">
             <option value="">-- Choisir une table --</option>
-            <option value="departement">Département</option>
-            <option value="villes_france_free">Villes</option>
-            <option value="MOCK_DATA">Mock Data</option>
+            {% for table in tables %}
+                <option value="{{ table }}" {% if table == request.form.table %}selected{% endif %}>{{ table }}</option>
+            {% endfor %}
         </select>
-    </div>
-    <div id="query-preview" class="query-preview" style="margin-top: 20px; font-family: monospace;">SELECT ... FROM ...</div>
-    <div id="message" class="message"></div>
-    <table id="table-preview" class="table-preview"></table>
+    </form>
+
+    <!-- Affichage de la requête générée -->
+    {% if query_preview %}
+        <div class="query-preview">
+            Requête générée : <code>{{ query_preview }}</code>
+        </div>
+    {% endif %}
+
+    <!-- Message si aucune donnée n'est trouvée -->
+    {% if rows is not defined or not rows %}
+        {% if query_preview %}
+            <div class="message">La table sélectionnée est vide ou n'existe pas.</div>
+        {% endif %}
+    {% else %}
+        <!-- Table d'affichage des résultats -->
+        <table>
+            <thead>
+                <tr>
+                    {% for col in columns %}
+                        <th>{{ col }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in rows %}
+                    <tr>
+                        {% for cell in row %}
+                            <td>{{ cell }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
 </body>
 </html>
